@@ -127,6 +127,12 @@ func (s *TraceSpan) Details() TraceSpanDetails {
 	return res
 }
 
+// SterilizeSpanAttributes handles some attributes shouldn't appear in UI.
+func (s *TraceSpan) SterilizeSpanAttributes() {
+	delete(s.SpanAttributes, "tgid_req_cs")
+	delete(s.SpanAttributes, "tgid_resp_cs")
+}
+
 type TraceErrorsStat struct {
 	ServiceName   string  `json:"service_name"`
 	SpanName      string  `json:"span_name"`

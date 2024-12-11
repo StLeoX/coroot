@@ -358,8 +358,11 @@ func (c *Client) getSpans(ctx context.Context, q SpanQuery, with string, orderBy
 		); err != nil {
 			return nil, err
 		}
-		l := len(eventsTimestamp)
-		if l > 0 && l == len(eventsName) && l == len(eventsAttributes) {
+		// handle resource attributes
+		// handle span attributes
+		s.SterilizeSpanAttributes()
+		// handle events
+		if l := len(eventsTimestamp); l > 0 && l == len(eventsName) && l == len(eventsAttributes) {
 			s.Events = make([]model.TraceSpanEvent, l)
 			for i := range eventsTimestamp {
 				s.Events[i].Timestamp = eventsTimestamp[i]
@@ -402,7 +405,10 @@ WHERE
 		if res[s.TraceId] == nil {
 			res[s.TraceId] = &model.Trace{}
 		}
-
+		// handle resource attributes
+		// handle span attributes
+		s.SterilizeSpanAttributes()
+		// handle events
 		if l := len(eventsTimestamp); l > 0 && l == len(eventsName) && l == len(eventsAttributes) {
 			s.Events = make([]model.TraceSpanEvent, l)
 			for i := range eventsTimestamp {
