@@ -1,6 +1,19 @@
+## Versions
 COROOT_VERSION ?= latest
-UI_PATH = front
 
+### Protobuf Tools
+BUF_VERSION := v1.40.1
+PROTOC_GEN_GO_VERSION := v1.34.2
+PROTOC_GEN_GO_GRPC_VERSION := v1.5.1
+
+## Variables
+UI_PATH = front
+mk_path  := $(abspath $(lastword $(MAKEFILE_LIST)))
+root_dir   := $(dir $(mk_path))
+proto_dir := $(root_dir)/api/proto
+tool_bin := $(root_dir)/bin
+
+## Top Targets
 .PHONY: all
 all: lint build test
 
@@ -8,7 +21,7 @@ all: lint build test
 lint: go-lint ui-lint
 
 .PHONY: build
-build: npm-build go-build
+build: npm-build pb-gen go-build
 
 .PHONY: build-fast
 build-fast: go-build
@@ -16,7 +29,7 @@ build-fast: go-build
 .PHONY: test
 test: go-test
 
-##### Basics
+## Basic Targets
 .PHONY: docker
 docker: npm-build
 	docker build --build-arg VERSION=$(COROOT_VERSION) -t registry.cn-beijing.aliyuncs.com/obser/coroot:$(COROOT_VERSION) .
@@ -71,3 +84,18 @@ npm-fmt:
 .PHONY: npm-build
 npm-build:
 	cd $(UI_PATH) && npm run build-prod
+
+BUF := $(tool_bin)/buf
+$(BUF):
+	@echo "Install proto plugins to $(tool_bin)"
+	@mkdir -p $(tool_bin)
+	@rm -f $(tool_bin)/protoc-gen-go
+	@rm -f $(tool_bin)/protoc-gen-go-grpc
+	@rm -f $(tool_bin)/buf
+	@GOBIN=$(tool_bin) go install google.golang.org/protobuf/cmd/protoc-gen-go@$(PROTOC_GEN_GO_VERSION)
+	@GOBIN=$(tool_bin) go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@$(PROTOC_GEN_GO_GRPC_VERSION)
+	@GOBIN=$(tool_bin) go install github.com/bufbuild/buf/cmd/buf@$(BUF_VERSION)
+
+.PHONY: pb-gen
+pb-gen: $(BUF)
+	@PATH=$(tool_bin):$(proto_dir) $(BUF) generate
