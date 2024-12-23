@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"embed"
 	"fmt"
-	"net"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
@@ -14,13 +13,13 @@ import (
 	"syscall"
 	"text/template"
 
-	xcorootv1 "github.com/StLeoX/coroot-extend-api/api/proto/coroot/service/v1"
 	"github.com/coroot/coroot/api"
+	v1 "github.com/coroot/coroot/api/proto/coroot/service/v1"
 	"github.com/coroot/coroot/cache"
 	cloud_pricing "github.com/coroot/coroot/cloud-pricing"
 	"github.com/coroot/coroot/collector"
 	"github.com/coroot/coroot/db"
-	rpc "github.com/coroot/coroot/grpc"
+	rpcv1 "github.com/coroot/coroot/grpc"
 	"github.com/coroot/coroot/rbac"
 	"github.com/coroot/coroot/stats"
 	"github.com/coroot/coroot/timeseries"
@@ -41,7 +40,6 @@ var static embed.FS
 
 func main() {
 	listen := kingpin.Flag("listen", "Listen address - ip:port or :port").Envar("LISTEN").Default("0.0.0.0:8888").String()
-	grpcListen := kingpin.Flag("grpc-listen", "Listen address for gRPC - ip:port or :port").Envar("GRPC_LISTEN").Default("0.0.0.0:8889").String()
 	urlBasePath := kingpin.Flag("url-base-path", "The base URL to run Coroot at a sub-path, e.g. /coroot/").Envar("URL_BASE_PATH").Default("/").String()
 	dataDir := kingpin.Flag("data-dir", `Path to the data directory`).Envar("DATA_DIR").Default("./data").String()
 	cacheTTL := kingpin.Flag("cache-ttl", "Cache TTL").Envar("CACHE_TTL").Default("720h").Duration()
@@ -203,16 +201,8 @@ func main() {
 		statsCollector = stats.NewCollector(instanceUuid, version, database, promCache, pricing, globalClickHouse)
 	}
 
-	grpcListener, err := net.Listen("tcp", *grpcListen)
-	if err != nil {
-		klog.Exitln(err)
-	}
 	grpcServer := grpc.NewServer()
-	xcorootv1.RegisterServerSpanServiceServer(grpcServer, rpc.NewServerSpanServiceServer(coll))
-	err = grpcServer.Serve(grpcListener)
-	if err != nil {
-		klog.Exitln(err)
-	}
+	v1.RegisterEventServiceServer(grpcServer, rpcv1.NewEventServiceServer(coll))
 
 	router := mux.NewRouter()
 	router.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
@@ -223,6 +213,7 @@ func main() {
 	router.HandleFunc("/v1/traces", coll.Traces)
 	router.HandleFunc("/v1/logs", coll.Logs)
 	router.HandleFunc("/v1/profiles", coll.Profiles)
+	router.HandleFunc("/v1/events", grpcServer.ServeHTTP)
 	router.HandleFunc("/v1/config", coll.Config)
 
 	r := router

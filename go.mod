@@ -7,7 +7,6 @@ require (
 	github.com/ClickHouse/clickhouse-go/v2 v2.8.3
 	github.com/DataDog/golz4 v1.3.0
 	github.com/PagerDuty/go-pagerduty v1.6.0
-	github.com/StLeoX/coroot-extend-api v0.0.0-20241230024220-78114c33e24b
 	github.com/atc0005/go-teams-notify/v2 v2.7.0
 	github.com/buger/jsonparser v1.1.1
 	github.com/coroot/logparser v1.1.4
@@ -40,7 +39,7 @@ require (
 	golang.org/x/term v0.25.0
 	gonum.org/v1/gonum v0.12.0
 	google.golang.org/grpc v1.67.1
-	google.golang.org/protobuf v1.36.1
+	google.golang.org/protobuf v1.34.2
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	inet.af/netaddr v0.0.0-20230525184311-b8eac61e914a
 	k8s.io/klog v1.0.0
