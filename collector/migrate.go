@@ -175,9 +175,9 @@ SETTINGS index_granularity=8192, ttl_only_drop_parts = 1`,
 ALTER TABLE otel_traces ADD COLUMN IF NOT EXISTS NetSockPeerAddr LowCardinality(String) 
 MATERIALIZED concat(SpanAttributes['net.peer.name'], ':', SpanAttributes['net.peer.port']) CODEC(ZSTD(1))`,
 
-		// 新建 ebpf_ss_events 表
+		// 新建 ebpf_server_spans 表
 		`
-CREATE TABLE IF NOT EXISTS ebpf_ss_events @on_cluster (
+CREATE TABLE IF NOT EXISTS ebpf_server_spans @on_cluster (
      Timestamp DateTime64(9) CODEC(Delta, ZSTD(1)),
      Duration Int64 CODEC(ZSTD(1)),
      ContainerId LowCardinality(String) CODEC(ZSTD(1)),
@@ -243,8 +243,8 @@ SELECT ServiceName, Type, max(End) AS LastSeen FROM profiling_samples group by S
 		`CREATE TABLE IF NOT EXISTS otel_traces_distributed ON CLUSTER @cluster AS otel_traces
 			ENGINE = Distributed(@cluster, currentDatabase(), otel_traces, cityHash64(TraceId))`,
 
-		`CREATE TABLE IF NOT EXISTS ebpf_ss_events_distributed ON CLUSTER @cluster AS ebpf_ss_events
-			ENGINE = Distributed(@cluster, currentDatabase(), ebpf_ss_events)`,
+		`CREATE TABLE IF NOT EXISTS ebpf_server_spans_distributed ON CLUSTER @cluster AS ebpf_server_spans
+			ENGINE = Distributed(@cluster, currentDatabase(), ebpf_server_spans)`,
 
 		`CREATE TABLE IF NOT EXISTS profiling_stacks_distributed ON CLUSTER @cluster AS profiling_stacks
 		ENGINE = Distributed(@cluster, currentDatabase(), profiling_stacks, Hash)`,
@@ -258,7 +258,7 @@ SELECT ServiceName, Type, max(End) AS LastSeen FROM profiling_samples group by S
 )
 
 func ReplaceTables(query string, distributed bool) string {
-	tbls := []string{"otel_logs", "otel_traces", "ebpf_ss_events", "profiling_stacks", "profiling_samples", "profiling_profiles"}
+	tbls := []string{"otel_logs", "otel_traces", "ebpf_server_spans", "profiling_stacks", "profiling_samples", "profiling_profiles"}
 	for _, t := range tbls {
 		placeholder := "@@table_" + t + "@@"
 		if distributed {

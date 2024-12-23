@@ -12,6 +12,7 @@ import (
 	"github.com/ClickHouse/ch-go/chpool"
 	chproto "github.com/ClickHouse/ch-go/proto"
 	"github.com/coroot/coroot/cache"
+	"github.com/coroot/coroot/collector/event"
 	"github.com/coroot/coroot/db"
 	"github.com/jpillora/backoff"
 	"golang.org/x/exp/maps"
@@ -44,15 +45,20 @@ type Collector struct {
 	projects     map[db.ProjectId]*db.Project
 	projectsLock sync.RWMutex
 
+	currentProjectId     db.ProjectId
+	currentProjectIdLock sync.RWMutex
+
 	clickhouseClients     map[db.ProjectId]*chClient
 	clickhouseClientsLock sync.RWMutex
 
-	traceBatches       map[db.ProjectId]*TracesBatch
-	traceBatchesLock   sync.Mutex
-	logBatches         map[db.ProjectId]*LogsBatch
-	logBatchesLock     sync.Mutex
-	profileBatches     map[db.ProjectId]*ProfilesBatch
-	profileBatchesLock sync.Mutex
+	traceBatches          map[db.ProjectId]*TracesBatch
+	traceBatchesLock      sync.Mutex
+	logBatches            map[db.ProjectId]*LogsBatch
+	logBatchesLock        sync.Mutex
+	profileBatches        map[db.ProjectId]*ProfilesBatch
+	profileBatchesLock    sync.Mutex
+	serverSpanBatches     map[db.ProjectId]*event.ServerSpansBatch
+	serverSpanBatchesLock sync.Mutex
 }
 
 func New(database *db.DB, cache *cache.Cache, globalClickHouse *db.IntegrationClickhouse, globalPrometheus *db.IntegrationsPrometheus) *Collector {
@@ -65,6 +71,7 @@ func New(database *db.DB, cache *cache.Cache, globalClickHouse *db.IntegrationCl
 		traceBatches:      map[db.ProjectId]*TracesBatch{},
 		profileBatches:    map[db.ProjectId]*ProfilesBatch{},
 		logBatches:        map[db.ProjectId]*LogsBatch{},
+		serverSpanBatches: map[db.ProjectId]*event.ServerSpansBatch{},
 	}
 
 	c.updateProjects()
@@ -323,6 +330,38 @@ func (c *Collector) getProfilesBatch(projectId db.ProjectId) *ProfilesBatch {
 		c.profileBatches[projectId] = b
 	}
 	return b
+}
+
+func (c *Collector) GetServerSpansBatch(projectId db.ProjectId) *event.ServerSpansBatch {
+	c.serverSpanBatchesLock.Lock()
+	defer c.serverSpanBatchesLock.Unlock()
+	b := c.serverSpanBatches[projectId]
+	if b == nil {
+		b = event.NewServerSpansBatch(batchLimit, batchTimeout, func(query ch.Query) error {
+			return c.clickhouseDo(context.TODO(), projectId, query)
+		})
+		c.serverSpanBatches[projectId] = b
+	}
+	return b
+}
+
+func (c *Collector) GetCurrentProjectId() db.ProjectId {
+	// fixme How to get current projectId? Usually uses the cache.
+	c.currentProjectIdLock.RLock()
+	defer c.currentProjectIdLock.RUnlock()
+	if c.currentProjectId == "" {
+		c.currentProjectId = "default"
+	}
+	return c.currentProjectId
+}
+
+func (c *Collector) updateCurrentProjectId(newId db.ProjectId) {
+	if newId == c.GetCurrentProjectId() {
+		return
+	}
+	c.currentProjectIdLock.Lock()
+	defer c.currentProjectIdLock.Unlock()
+	c.currentProjectId = newId
 }
 
 func (c *Collector) IsClickhouseDistributed(projectId db.ProjectId) (bool, error) {

@@ -14,10 +14,12 @@ import (
 	"text/template"
 
 	"github.com/coroot/coroot/api"
+	v1 "github.com/coroot/coroot/api/proto/coroot/service/v1"
 	"github.com/coroot/coroot/cache"
 	cloud_pricing "github.com/coroot/coroot/cloud-pricing"
 	"github.com/coroot/coroot/collector"
 	"github.com/coroot/coroot/db"
+	rpcv1 "github.com/coroot/coroot/grpc"
 	"github.com/coroot/coroot/rbac"
 	"github.com/coroot/coroot/stats"
 	"github.com/coroot/coroot/timeseries"
@@ -26,6 +28,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"golang.org/x/term"
+	"google.golang.org/grpc"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"k8s.io/klog"
 )
@@ -198,14 +201,19 @@ func main() {
 		statsCollector = stats.NewCollector(instanceUuid, version, database, promCache, pricing, globalClickHouse)
 	}
 
+	grpcServer := grpc.NewServer()
+	v1.RegisterEventServiceServer(grpcServer, rpcv1.NewEventServiceServer(coll))
+
 	router := mux.NewRouter()
 	router.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {}).Methods(http.MethodGet)
 
+	// As the server collecting data from eBPF agents and OTel exporters.
 	router.HandleFunc("/v1/metrics", coll.Metrics)
 	router.HandleFunc("/v1/traces", coll.Traces)
 	router.HandleFunc("/v1/logs", coll.Logs)
 	router.HandleFunc("/v1/profiles", coll.Profiles)
+	router.HandleFunc("/v1/events", grpcServer.ServeHTTP)
 	router.HandleFunc("/v1/config", coll.Config)
 
 	r := router
@@ -213,6 +221,7 @@ func main() {
 	if *urlBasePath != "/" {
 		r = router.PathPrefix(strings.TrimRight(*urlBasePath, "/")).Subrouter()
 	}
+	// As the server serving the front end.
 	r.HandleFunc("/api/login", a.Login).Methods(http.MethodPost)
 	r.HandleFunc("/api/logout", a.Logout).Methods(http.MethodPost)
 
@@ -257,6 +266,7 @@ func main() {
 
 	router.PathPrefix("").Handler(http.RedirectHandler(*urlBasePath, http.StatusMovedPermanently))
 
+	// No TLS currently!
 	klog.Infoln("listening on", *listen)
 	klog.Fatalln(http.ListenAndServe(*listen, router))
 }
