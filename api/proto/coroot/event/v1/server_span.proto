@@ -4,7 +4,7 @@ package coroot.event.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/coroot/coroot/api/coroot/event/v1";
+option go_package = "github.com/coroot/coroot/api/proto/coroot/event/v1";
 
 // server-side L7 span
 message ServerSpan {
