@@ -17,12 +17,15 @@ import (
 )
 
 func (c *Collector) Traces(w http.ResponseWriter, r *http.Request) {
+	// fixme 在 server 能拿到 ApiKeyHeader 相应的 ProjectId，但是目前 coroot-node-agent 无法发射 ApiKeyHeader。
 	project, err := c.getProject(db.ProjectId(r.Header.Get(ApiKeyHeader)))
 	if err != nil {
 		klog.Errorln(err)
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
+	// todo 是否在其他两个 handler 中同样更新？
+	c.updateCurrentProjectId(project.Id)
 
 	_, err = c.getClickhouseClient(project.Id)
 	if err != nil {
@@ -34,6 +37,7 @@ func (c *Collector) Traces(w http.ResponseWriter, r *http.Request) {
 	contentType := r.Header.Get("Content-Type")
 	switch contentType {
 	case "application/x-protobuf":
+		// Needs only protobuf content.
 	default:
 		http.Error(w, "unsupported content type: "+contentType, http.StatusBadRequest)
 		return
@@ -45,6 +49,7 @@ func (c *Collector) Traces(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// ReadAll 表明整个 body 就是 pb 定义的格式。
 	data, err := io.ReadAll(decoder)
 	if err != nil {
 		klog.Errorln(err)
@@ -76,8 +81,8 @@ type TracesBatch struct {
 	limit int
 	exec  func(query ch.Query) error
 
-	addLock sync.Mutex
-	done    chan struct{}
+	lock sync.Mutex
+	done chan struct{}
 
 	Timestamp          *chproto.ColDateTime64
 	TraceId            *chproto.ColStr
@@ -139,9 +144,9 @@ func NewTracesBatch(limit int, timeout time.Duration, exec func(query ch.Query) 
 			case <-b.done:
 				return
 			case <-ticker.C:
-				b.addLock.Lock()
+				b.lock.Lock()
 				b.save()
-				b.addLock.Unlock()
+				b.lock.Unlock()
 			}
 		}
 	}()
@@ -151,14 +156,14 @@ func NewTracesBatch(limit int, timeout time.Duration, exec func(query ch.Query) 
 
 func (b *TracesBatch) Close() {
 	b.done <- struct{}{}
-	b.addLock.Lock()
-	defer b.addLock.Unlock()
+	b.lock.Lock()
+	defer b.lock.Unlock()
 	b.save()
 }
 
 func (b *TracesBatch) Add(req *v1.ExportTraceServiceRequest) {
-	b.addLock.Lock()
-	defer b.addLock.Unlock()
+	b.lock.Lock()
+	defer b.lock.Unlock()
 
 	for _, rs := range req.GetResourceSpans() {
 		// 物化 ServiceName。
