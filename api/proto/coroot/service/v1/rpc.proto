@@ -4,7 +4,7 @@ package coroot.service.v1;
 
 import "coroot/event/v1/server_span.proto";
 
-option go_package = "github.com/coroot/coroot/api/coroot/service/v1";
+option go_package = "github.com/coroot/coroot/api/proto/coroot/service/v1";
 
 message EventServiceUploadRequest {
   repeated coroot.event.v1.ServerSpan spans = 1;
@@ -15,6 +15,5 @@ message EventServiceUploadResponse {
 
 service EventService {
   rpc Upload(EventServiceUploadRequest) returns (EventServiceUploadResponse) {
-
   }
 }
