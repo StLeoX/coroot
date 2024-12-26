@@ -3,7 +3,7 @@ package event
 import (
 	"github.com/ClickHouse/ch-go"
 	chproto "github.com/ClickHouse/ch-go/proto"
-	v1 "github.com/coroot/coroot/api/proto/coroot/service/v1"
+	eventv1 "github.com/coroot/coroot/api/proto/coroot/event/v1"
 	"k8s.io/klog"
 	"sync"
 	"time"
@@ -63,18 +63,17 @@ func (b *ServerSpansBatch) Close() {
 	b.save()
 }
 
-func (b *ServerSpansBatch) Add(req *v1.EventServiceUploadRequest) {
+func (b *ServerSpansBatch) Add(serverSpan *eventv1.ServerSpan) {
 	b.lock.Lock()
 	defer b.lock.Unlock()
 
-	for _, s := range req.Spans {
-		b.Timestamp.Append(s.Timestamp.AsTime())
-		b.Duration.Append(s.Duration)
-		b.ContainerId.Append(s.ContainerId)
-		b.TgidRead.Append(s.TgidRead)
-		b.TgidWrite.Append(s.TgidWrite)
-		b.RequestId.Append(s.RequestId)
-	}
+	b.Timestamp.Append(serverSpan.Timestamp.AsTime())
+	b.Duration.Append(serverSpan.Duration)
+	b.ContainerId.Append(serverSpan.ContainerId)
+	b.TgidRead.Append(serverSpan.TgidRead)
+	b.TgidWrite.Append(serverSpan.TgidWrite)
+	b.RequestId.Append(serverSpan.RequestId)
+
 	if b.Timestamp.Rows() < b.limit {
 		return
 	}
