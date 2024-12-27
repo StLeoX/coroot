@@ -1,12 +1,13 @@
 package event
 
 import (
-	"github.com/ClickHouse/ch-go"
-	chproto "github.com/ClickHouse/ch-go/proto"
-	eventv1 "github.com/coroot/coroot/api/proto/coroot/event/v1"
-	"k8s.io/klog"
 	"sync"
 	"time"
+
+	"github.com/ClickHouse/ch-go"
+	chproto "github.com/ClickHouse/ch-go/proto"
+	eventv1 "github.com/StLeoX/coroot-extend-api/api/proto/coroot/event/v1"
+	"k8s.io/klog"
 )
 
 type ServerSpansBatch struct {

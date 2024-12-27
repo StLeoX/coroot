@@ -2,20 +2,21 @@ package grpc
 
 import (
 	"io"
+
 	"k8s.io/klog"
 
-	corootv1 "github.com/coroot/coroot/api/proto/coroot/service/v1"
+	xcorootv1 "github.com/StLeoX/coroot-extend-api/api/proto/coroot/service/v1"
 	"github.com/coroot/coroot/collector"
 	"github.com/coroot/coroot/collector/event"
 )
 
 type ServerSpanServiceServer struct {
-	corootv1.UnimplementedServerSpanServiceServer
+	xcorootv1.UnimplementedServerSpanServiceServer
 	batcher *event.ServerSpansBatch
 }
 
-func (es *ServerSpanServiceServer) Upload(stream corootv1.ServerSpanService_UploadServer) error {
-	resp := &corootv1.ServerSpanServiceUploadResponse{}
+func (es *ServerSpanServiceServer) Upload(stream xcorootv1.ServerSpanService_UploadServer) error {
+	resp := &xcorootv1.ServerSpanServiceUploadResponse{}
 
 	for {
 		req, err := stream.Recv()

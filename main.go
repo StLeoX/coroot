@@ -13,8 +13,8 @@ import (
 	"syscall"
 	"text/template"
 
+	xcorootv1 "github.com/StLeoX/coroot-extend-api/api/proto/coroot/service/v1"
 	"github.com/coroot/coroot/api"
-	corootv1 "github.com/coroot/coroot/api/proto/coroot/service/v1"
 	"github.com/coroot/coroot/cache"
 	cloud_pricing "github.com/coroot/coroot/cloud-pricing"
 	"github.com/coroot/coroot/collector"
@@ -202,7 +202,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	corootv1.RegisterServerSpanServiceServer(grpcServer, rpc.NewServerSpanServiceServer(coll))
+	xcorootv1.RegisterServerSpanServiceServer(grpcServer, rpc.NewServerSpanServiceServer(coll))
 
 	router := mux.NewRouter()
 	router.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)

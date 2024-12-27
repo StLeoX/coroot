@@ -1,9 +1,10 @@
 package utils
 
 import (
+	"testing"
+
 	"github.com/coroot/coroot/timeseries"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 var now = timeseries.Now()
