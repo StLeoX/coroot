@@ -9,7 +9,8 @@ services:
     volumes:
       - /D/tmp/coroot/coroot_data:/data
     ports:
-      - "8888:8888"  # This port is used as: Web UI, OTel collector.
+      - "8888:8888"  # This port is used for Web UI, OTel collector.
+      - "8889:8889" # This port is used for gRPC
       - "40000:40000" # For DLV
     command:
       - '--data-dir=/data'
@@ -32,7 +33,7 @@ services:
       - /D/tmp/coroot/node_agent_data:/data
     command:
       - '--collector-endpoint=http://coroot:8888'
-      - '--clickhouse-endpoint=clickhouse:9000'
+      - '--grpc-endpoint=coroot:8889'
       - '--cgroupfs-root=/host/sys/fs/cgroup'
       - '--wal-dir=/data'
     depends_on:

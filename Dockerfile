@@ -16,5 +16,6 @@ COPY --from=backend-builder /tmp/src/coroot /usr/bin/coroot
 
 VOLUME /data
 EXPOSE 8888
+EXPOSE 8889
 
 ENTRYPOINT ["coroot"]
