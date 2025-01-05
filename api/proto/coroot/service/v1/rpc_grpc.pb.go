@@ -19,96 +19,103 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ServerSpanService_Upload_FullMethodName = "/coroot.service.v1.ServerSpanService/Upload"
+	EventService_Upload_FullMethodName = "/coroot.service.v1.EventService/Upload"
 )
 
-// ServerSpanServiceClient is the client API for ServerSpanService service.
+// EventServiceClient is the client API for EventService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ServerSpanServiceClient interface {
-	Upload(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[ServerSpanServiceUploadRequest, ServerSpanServiceUploadResponse], error)
+type EventServiceClient interface {
+	Upload(ctx context.Context, in *EventServiceUploadRequest, opts ...grpc.CallOption) (*EventServiceUploadResponse, error)
 }
 
-type serverSpanServiceClient struct {
+type eventServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewServerSpanServiceClient(cc grpc.ClientConnInterface) ServerSpanServiceClient {
-	return &serverSpanServiceClient{cc}
+func NewEventServiceClient(cc grpc.ClientConnInterface) EventServiceClient {
+	return &eventServiceClient{cc}
 }
 
-func (c *serverSpanServiceClient) Upload(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[ServerSpanServiceUploadRequest, ServerSpanServiceUploadResponse], error) {
+func (c *eventServiceClient) Upload(ctx context.Context, in *EventServiceUploadRequest, opts ...grpc.CallOption) (*EventServiceUploadResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &ServerSpanService_ServiceDesc.Streams[0], ServerSpanService_Upload_FullMethodName, cOpts...)
+	out := new(EventServiceUploadResponse)
+	err := c.cc.Invoke(ctx, EventService_Upload_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[ServerSpanServiceUploadRequest, ServerSpanServiceUploadResponse]{ClientStream: stream}
-	return x, nil
+	return out, nil
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ServerSpanService_UploadClient = grpc.ClientStreamingClient[ServerSpanServiceUploadRequest, ServerSpanServiceUploadResponse]
-
-// ServerSpanServiceServer is the server API for ServerSpanService service.
-// All implementations must embed UnimplementedServerSpanServiceServer
+// EventServiceServer is the server API for EventService service.
+// All implementations must embed UnimplementedEventServiceServer
 // for forward compatibility.
-type ServerSpanServiceServer interface {
-	Upload(grpc.ClientStreamingServer[ServerSpanServiceUploadRequest, ServerSpanServiceUploadResponse]) error
-	mustEmbedUnimplementedServerSpanServiceServer()
+type EventServiceServer interface {
+	Upload(context.Context, *EventServiceUploadRequest) (*EventServiceUploadResponse, error)
+	mustEmbedUnimplementedEventServiceServer()
 }
 
-// UnimplementedServerSpanServiceServer must be embedded to have
+// UnimplementedEventServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedServerSpanServiceServer struct{}
+type UnimplementedEventServiceServer struct{}
 
-func (UnimplementedServerSpanServiceServer) Upload(grpc.ClientStreamingServer[ServerSpanServiceUploadRequest, ServerSpanServiceUploadResponse]) error {
-	return status.Errorf(codes.Unimplemented, "method Upload not implemented")
+func (UnimplementedEventServiceServer) Upload(context.Context, *EventServiceUploadRequest) (*EventServiceUploadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Upload not implemented")
 }
-func (UnimplementedServerSpanServiceServer) mustEmbedUnimplementedServerSpanServiceServer() {}
-func (UnimplementedServerSpanServiceServer) testEmbeddedByValue()                           {}
+func (UnimplementedEventServiceServer) mustEmbedUnimplementedEventServiceServer() {}
+func (UnimplementedEventServiceServer) testEmbeddedByValue()                      {}
 
-// UnsafeServerSpanServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ServerSpanServiceServer will
+// UnsafeEventServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to EventServiceServer will
 // result in compilation errors.
-type UnsafeServerSpanServiceServer interface {
-	mustEmbedUnimplementedServerSpanServiceServer()
+type UnsafeEventServiceServer interface {
+	mustEmbedUnimplementedEventServiceServer()
 }
 
-func RegisterServerSpanServiceServer(s grpc.ServiceRegistrar, srv ServerSpanServiceServer) {
-	// If the following call pancis, it indicates UnimplementedServerSpanServiceServer was
+func RegisterEventServiceServer(s grpc.ServiceRegistrar, srv EventServiceServer) {
+	// If the following call pancis, it indicates UnimplementedEventServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&ServerSpanService_ServiceDesc, srv)
+	s.RegisterService(&EventService_ServiceDesc, srv)
 }
 
-func _ServerSpanService_Upload_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ServerSpanServiceServer).Upload(&grpc.GenericServerStream[ServerSpanServiceUploadRequest, ServerSpanServiceUploadResponse]{ServerStream: stream})
+func _EventService_Upload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EventServiceUploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EventServiceServer).Upload(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EventService_Upload_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EventServiceServer).Upload(ctx, req.(*EventServiceUploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type ServerSpanService_UploadServer = grpc.ClientStreamingServer[ServerSpanServiceUploadRequest, ServerSpanServiceUploadResponse]
-
-// ServerSpanService_ServiceDesc is the grpc.ServiceDesc for ServerSpanService service.
+// EventService_ServiceDesc is the grpc.ServiceDesc for EventService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ServerSpanService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "coroot.service.v1.ServerSpanService",
-	HandlerType: (*ServerSpanServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams: []grpc.StreamDesc{
+var EventService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "coroot.service.v1.EventService",
+	HandlerType: (*EventServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
-			StreamName:    "Upload",
-			Handler:       _ServerSpanService_Upload_Handler,
-			ClientStreams: true,
+			MethodName: "Upload",
+			Handler:    _EventService_Upload_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "coroot/service/v1/rpc.proto",
 }

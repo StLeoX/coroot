@@ -14,12 +14,12 @@ import (
 	"text/template"
 
 	"github.com/coroot/coroot/api"
-	corootv1 "github.com/coroot/coroot/api/proto/coroot/service/v1"
+	v1 "github.com/coroot/coroot/api/proto/coroot/service/v1"
 	"github.com/coroot/coroot/cache"
 	cloud_pricing "github.com/coroot/coroot/cloud-pricing"
 	"github.com/coroot/coroot/collector"
 	"github.com/coroot/coroot/db"
-	rpc "github.com/coroot/coroot/grpc"
+	rpcv1 "github.com/coroot/coroot/grpc"
 	"github.com/coroot/coroot/rbac"
 	"github.com/coroot/coroot/stats"
 	"github.com/coroot/coroot/timeseries"
@@ -202,7 +202,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	corootv1.RegisterServerSpanServiceServer(grpcServer, rpc.NewServerSpanServiceServer(coll))
+	v1.RegisterEventServiceServer(grpcServer, rpcv1.NewEventServiceServer(coll))
 
 	router := mux.NewRouter()
 	router.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
