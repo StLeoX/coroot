@@ -1,24 +1,35 @@
 package grpc
 
 import (
-	"context"
-	v1 "github.com/coroot/coroot/api/proto/coroot/service/v1"
+	"io"
+
+	xcorootv1 "github.com/StLeoX/coroot-extend-api/api/proto/coroot/service/v1"
 	"github.com/coroot/coroot/collector"
 	"github.com/coroot/coroot/collector/event"
 )
 
-type EventServiceServer struct {
-	v1.UnimplementedEventServiceServer
+type ServerSpanServiceServer struct {
+	xcorootv1.UnimplementedServerSpanServiceServer
 	batcher *event.ServerSpansBatch
 }
 
-func (es *EventServiceServer) Upload(_ context.Context, req *v1.EventServiceUploadRequest) (*v1.EventServiceUploadResponse, error) {
-	es.batcher.Add(req)
-	return &v1.EventServiceUploadResponse{}, nil
+func (es *ServerSpanServiceServer) Upload(stream xcorootv1.ServerSpanService_UploadServer) error {
+	resp := &xcorootv1.ServerSpanServiceUploadResponse{}
+
+	for {
+		req, err := stream.Recv()
+		// end of downstream
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+		es.batcher.Add(req.Span)
+	}
+	return stream.SendAndClose(resp)
 }
 
-func NewEventServiceServer(coll *collector.Collector) *EventServiceServer {
-	return &EventServiceServer{
-		batcher: coll.GetServerSpansBatch(coll.GetCurrentProjectId()),
-	}
+func NewServerSpanServiceServer(coll *collector.Collector) *ServerSpanServiceServer {
+	return &ServerSpanServiceServer{batcher: coll.GetServerSpansBatch(coll.GetCurrentProjectId())}
 }
