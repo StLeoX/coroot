@@ -55,4 +55,4 @@ npm-build:
 .PHONY: docker
 #docker: npm-build # 暂时不改前端，所以不需要重新构建
 docker:
-	docker build . -t registry.cn-beijing.aliyuncs.com/obser/coroot:latest
+	docker build . -t registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.1-fix
