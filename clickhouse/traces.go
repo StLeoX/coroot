@@ -697,8 +697,7 @@ func (q SpanQuery) DurationFilter() (string, []any) {
 
 func (q SpanQuery) RootSpansFilter() ([]string, []any) {
 	filter := []string{
-		"ParentSpanId = ''",
-		"NOT startsWith(ServiceName, '/')",
+		"SpanId = TraceId", // 局限于 eBPF + tracing-algo 计算的 Trace
 	}
 	for _, f := range q.Filters {
 		filter = append(filter, f.String())
