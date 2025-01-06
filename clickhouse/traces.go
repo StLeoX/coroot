@@ -133,9 +133,9 @@ func (c *Client) GetParentSpans(ctx context.Context, spans []*model.TraceSpan) (
 	}
 	var q SpanQuery
 	return c.getSpans(ctx, q,
-		"@traceIds as traceIds, (SELECT min(Start) FROM @@table_otel_traces_trace_id_ts@@ WHERE TraceId IN (traceIds)) as start, (SELECT max(End) + 1 FROM @@table_otel_traces_trace_id_ts@@ WHERE TraceId IN (traceIds)) as end",
 		"",
-		[]string{"Timestamp BETWEEN start AND end", "TraceId IN (traceIds)", "(TraceId, SpanId) IN (@ids)"},
+		"",
+		[]string{"TraceId IN (traceIds)", "(TraceId, SpanId) IN (@ids)"},
 		[]any{
 			clickhouse.Named("traceIds", maps.Keys(traceIds)),
 			clickhouse.Named("ids", ids),
@@ -146,9 +146,9 @@ func (c *Client) GetParentSpans(ctx context.Context, spans []*model.TraceSpan) (
 func (c *Client) GetSpansByTraceId(ctx context.Context, traceId string) ([]*model.TraceSpan, error) {
 	var q SpanQuery
 	return c.getSpans(ctx, q,
-		"(SELECT min(Start) FROM @@table_otel_traces_trace_id_ts@@ WHERE TraceId = @traceId) as start, (SELECT max(End) + 1 FROM @@table_otel_traces_trace_id_ts@@ WHERE TraceId = @traceId) as end",
+		"",
 		"Timestamp",
-		[]string{"TraceId = @traceId", "Timestamp BETWEEN start AND end"},
+		[]string{"TraceId = @traceId"},
 		[]any{
 			clickhouse.Named("traceId", traceId),
 		},
