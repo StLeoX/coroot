@@ -135,7 +135,7 @@ func (c *Client) GetParentSpans(ctx context.Context, spans []*model.TraceSpan) (
 	return c.getSpans(ctx, q,
 		"",
 		"",
-		[]string{"TraceId IN (traceIds)", "(TraceId, SpanId) IN (@ids)"},
+		[]string{"TraceId IN (@traceIds)", "(TraceId, SpanId) IN (@ids)"},
 		[]any{
 			clickhouse.Named("traceIds", maps.Keys(traceIds)),
 			clickhouse.Named("ids", ids),
@@ -663,7 +663,8 @@ type SpanQuery struct {
 
 	Limit int
 
-	Filters          []SpanFilter
+	Filters []SpanFilter
+	// This is list of ips, not ipports, don't misuse.
 	ExcludePeerAddrs []string
 
 	Diff bool
@@ -710,8 +711,8 @@ func (q SpanQuery) RootSpansFilter() ([]string, []any) {
 	}
 	var args []any
 	if len(q.ExcludePeerAddrs) > 0 {
-		filter = append(filter, "SpanAttributes['net.sock.peer.addr'] NOT IN (@addrs)")
-		args = append(args, clickhouse.Named("addrs", q.ExcludePeerAddrs))
+		filter = append(filter, "SpanAttributes['net.peer.name'] NOT IN (@ips)")
+		args = append(args, clickhouse.Named("ips", q.ExcludePeerAddrs))
 	}
 	return filter, args
 }
@@ -725,8 +726,8 @@ func (q SpanQuery) SpansByServiceNameFilter() ([]string, []any) {
 	}
 	var args []any
 	if len(q.ExcludePeerAddrs) > 0 {
-		filter = append(filter, "SpanAttributes['net.sock.peer.addr'] NOT IN (@addrs)")
-		args = append(args, clickhouse.Named("addrs", q.ExcludePeerAddrs))
+		filter = append(filter, "SpanAttributes['net.peer.name'] NOT IN (@ips)")
+		args = append(args, clickhouse.Named("ips", q.ExcludePeerAddrs))
 	}
 	return filter, args
 }
@@ -738,18 +739,18 @@ func inboundSpansFilter(clients []string, listens []model.Listen) ([]string, []a
 			ips[l.IP] = true
 		}
 	}
-	var addrs []string
+	var ipports []string
 	for _, l := range listens {
-		addrs = append(addrs, fmt.Sprintf("%s:%s", l.IP, l.Port))
+		ipports = append(ipports, fmt.Sprintf("%s:%s", l.IP, l.Port))
 	}
 	filter := []string{
 		"ServiceName IN (@services)",
-		"(SpanAttributes['net.peer.name'] IN (@ips) OR SpanAttributes['net.sock.peer.addr'] IN (@addrs))",
+		"(SpanAttributes['net.peer.name'] IN (@ips) OR NetSockPeerAddr IN (@ipports))",
 	}
 	args := []any{
 		clickhouse.Named("services", clients),
 		clickhouse.Named("ips", maps.Keys(ips)),
-		clickhouse.Named("addrs", addrs),
+		clickhouse.Named("ipports", ipports),
 	}
 	return filter, args
 }

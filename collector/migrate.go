@@ -165,6 +165,11 @@ PARTITION BY toDate(Timestamp)
 ORDER BY (ServiceName, SpanName, toUnixTimestamp(Timestamp))
 SETTINGS index_granularity=8192, ttl_only_drop_parts = 1`,
 
+		// 新建物化列 NetSockPeerAddr。
+		`
+ALTER TABLE otel_traces ADD COLUMN IF NOT EXISTS NetSockPeerAddr LowCardinality(String) 
+MATERIALIZED concat(SpanAttributes['net.peer.name'], ':', SpanAttributes['net.peer.port']) CODEC(ZSTD(1))`,
+
 		// 新建表 otel_traces_trace_id_ts。
 		`
 CREATE TABLE IF NOT EXISTS otel_traces_trace_id_ts @on_cluster (
@@ -187,9 +192,6 @@ SELECT
 FROM otel_traces
 WHERE TraceId!=''
 GROUP BY TraceId`,
-
-		// 物化列 NetSockPeerAddr 从 SpanAttributes 中提取。
-		`ALTER TABLE otel_traces @on_cluster ADD COLUMN IF NOT EXISTS NetSockPeerAddr LowCardinality(String) MATERIALIZED SpanAttributes['net.sock.peer.addr'] CODEC(ZSTD(1))`,
 
 		// 新建 l7_events_ss 表
 		`

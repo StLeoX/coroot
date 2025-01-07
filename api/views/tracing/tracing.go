@@ -321,7 +321,7 @@ func getClientsByParentSpans(spans []*model.TraceSpan, parentSpans []*model.Trac
 	for _, s := range spans {
 		k := spanKey{traceId: s.TraceId, spanId: s.SpanId}
 		res[k] = serviceNames[spanKey{traceId: s.TraceId, spanId: s.ParentSpanId}]
-		addr := s.SpanAttributes["net.sock.peer.addr"]
+		addr := fmt.Sprintf("%s:%s", s.SpanAttributes["net.peer.name"], s.SpanAttributes["net.peer.port"])
 		if res[k] == "" {
 			res[k] = appByPodIp[addr].Name
 		}
