@@ -144,6 +144,11 @@ func (c *Client) GetParentSpans(ctx context.Context, spans []*model.TraceSpan) (
 }
 
 func (c *Client) GetSpansByTraceId(ctx context.Context, traceId string) ([]*model.TraceSpan, error) {
+	// matches only TraceSourceAgent
+	if len(traceId) != 16 {
+		return nil, nil
+	}
+
 	var q SpanQuery
 	return c.getSpans(ctx, q,
 		"",
@@ -752,6 +757,8 @@ func inboundSpansFilter(clients []string, listens []model.Listen) ([]string, []a
 		clickhouse.Named("ips", maps.Keys(ips)),
 		clickhouse.Named("ipports", ipports),
 	}
+	// matches only coroot-tracing-algo traces
+	filter = append(filter, "length(TraceId) = 16")
 	return filter, args
 }
 
