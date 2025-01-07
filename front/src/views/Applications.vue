@@ -23,11 +23,11 @@
             :items="items"
             no-data-text="No applications found"
             :headers="[
-                { value: 'application', text: 'Application', sortable: false },
+                { value: 'application', text: 'Container', sortable: false },
                 { value: 'type', text: 'Type', sortable: false },
                 { value: 'errors', text: 'Errors', sortable: false, align: 'end' },
                 { value: 'latency', text: 'Latency', sortable: false, align: 'end' },
-                { value: 'upstreams', text: 'Upstreams', sortable: false, align: 'end' },
+                { value: 'upstreams', text: 'Clients', sortable: false, align: 'end' },
                 { value: 'instances', text: 'Instances', sortable: false, align: 'end' },
                 { value: 'restarts', text: 'Restarts', sortable: false, align: 'end' },
                 { value: 'cpu', text: 'CPU', sortable: false, align: 'end' },
