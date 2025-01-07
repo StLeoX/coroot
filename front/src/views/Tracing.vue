@@ -69,7 +69,7 @@
                         <td>
                             <router-link :to="{ query: setTrace({ id: s.trace_id, span: s.id }) }" exact class="text-no-wrap">
                                 <v-icon small style="vertical-align: baseline">mdi-chart-timeline</v-icon>
-                                {{ s.trace_id.substring(0, 8) }}
+                                {{ s.trace_id.substring(0, 16) }}
                             </router-link>
                         </td>
                         <td class="text-no-wrap">{{ s.client }}</td>

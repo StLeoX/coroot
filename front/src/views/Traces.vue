@@ -253,7 +253,7 @@
                             <td>
                                 <router-link :to="openTrace(s.trace_id)" exact class="text-no-wrap">
                                     <v-icon small style="vertical-align: baseline">mdi-chart-timeline</v-icon>
-                                    {{ s.trace_id.substring(0, 8) }}
+                                    {{ s.trace_id.substring(0, 16) }}
                                 </router-link>
                             </td>
                             <td class="text-no-wrap">{{ s.service }}</td>
@@ -363,7 +363,7 @@
                     <template #item.sample_trace_id="{ item }">
                         <router-link :to="openTrace(item.sample_trace_id)" exact class="nowrap">
                             <v-icon small style="vertical-align: baseline">mdi-chart-timeline</v-icon>
-                            {{ item.sample_trace_id.substring(0, 8) }}
+                            {{ item.sample_trace_id.substring(0, 16) }}
                         </router-link>
                     </template>
                     <template #item.count="{ item }">
