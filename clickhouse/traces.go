@@ -719,7 +719,7 @@ func (q SpanQuery) RootSpansFilter() ([]string, []any) {
 
 func (q SpanQuery) SpansByServiceNameFilter() ([]string, []any) {
 	filter := []string{
-		"SpanKind = 'SPAN_KIND_SERVER'",
+		// "SpanKind = 'SPAN_KIND_SERVER'",
 	}
 	for _, f := range q.Filters {
 		filter = append(filter, f.String())
