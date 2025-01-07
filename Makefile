@@ -56,3 +56,7 @@ npm-build:
 #docker: npm-build # 暂时不改前端，所以不需要重新构建
 docker:
 	docker build . -t registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.1-fix
+
+.PHONY: docker.debug
+docker.debug:
+	docker build . -f Dockerfile.debug -t registry.cn-beijing.aliyuncs.com/obser/coroot:debug
