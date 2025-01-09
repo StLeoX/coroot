@@ -257,7 +257,7 @@ func Render(ctx context.Context, ch *clickhouse.Client, app *model.Application, 
 	v.Status = model.OK
 	for _, s := range spans {
 		ss := Span{
-			Service:    getService(source, s, app),
+			Service:    s.ServiceName,
 			TraceId:    s.TraceId,
 			Id:         s.SpanId,
 			ParentId:   s.ParentSpanId,
@@ -285,16 +285,6 @@ func Render(ctx context.Context, ch *clickhouse.Client, app *model.Application, 
 		v.Spans = append(v.Spans, ss)
 	}
 	return v
-}
-
-func getService(typ model.TraceSource, s *model.TraceSpan, app *model.Application) string {
-	switch typ {
-	case model.TraceSourceOtel:
-		return s.ServiceName
-	case model.TraceSourceAgent:
-		return app.Id.Name
-	}
-	return ""
 }
 
 type spanKey struct {
