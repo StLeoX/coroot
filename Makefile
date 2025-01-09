@@ -53,9 +53,8 @@ npm-build:
 	cd $(UI_PATH) && npm run build-prod
 
 .PHONY: docker
-#docker: npm-build # 暂时不改前端，所以不需要重新构建
-docker:
-	docker build . -t registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.1-fix
+docker: npm-build
+	docker build . -t registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.3
 
 .PHONY: docker.debug
 docker.debug:

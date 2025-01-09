@@ -5,7 +5,7 @@ COPY go.mod .
 COPY go.sum .
 RUN export GOPROXY='https://goproxy.cn' && go mod download
 COPY . .
-ARG VERSION=v1.24.1-fix
+ARG VERSION=v1.24.3
 RUN go build -mod=readonly -ldflags "-X main.version=$VERSION" -o coroot .
 
 
