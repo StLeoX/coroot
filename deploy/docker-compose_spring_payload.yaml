@@ -1,0 +1,43 @@
+version: '3.8'
+
+name: spring
+
+services:
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.6
+    ports:
+      - "16686:16686"
+
+  redis:
+    image: registry.cn-beijing.aliyuncs.com/obser/redis:4.0.9
+    environment:
+      ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - "6379:6379"
+
+  foo-svc:
+    image: registry.cn-beijing.aliyuncs.com/obser/foo-svc:latest
+    environment:
+      JAEGER_UDP_SENDER_HOST: jaeger
+    ports:
+      - "8080:8080"
+    links:
+      - redis
+      - jaeger
+
+  bar-svc:
+    image: registry.cn-beijing.aliyuncs.com/obser/bar-svc:latest
+    environment:
+      JAEGER_UDP_SENDER_HOST: jaeger
+    links:
+      - redis
+      - jaeger
+
+  loo-svc:
+    image: registry.cn-beijing.aliyuncs.com/obser/loo-svc:latest
+    environment:
+      JAEGER_UDP_SENDER_HOST: jaeger
+    links:
+      - redis
+      - jaeger

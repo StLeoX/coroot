@@ -1,0 +1,91 @@
+version: '3.8'
+
+name: coroot
+
+services:
+  coroot:
+    restart: always
+    image: registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.3
+    volumes:
+      - /D/tmp/coroot2/coroot_data:/data
+    ports:
+      - "8888:8888"  # This port is used for Web UI, OTel collector.
+    command:
+      - '--data-dir=/data'
+      - '--bootstrap-prometheus-url=http://prometheus:9090'
+      - '--bootstrap-refresh-interval=15s'
+      - '--bootstrap-clickhouse-address=clickhouse:9000'
+    depends_on:
+      - clickhouse
+      - prometheus
+
+  node-agent:
+    restart: always
+    image: registry.cn-beijing.aliyuncs.com/obser/coroot-node-agent:v1.24.3
+    privileged: true
+    pid: "host"
+    volumes:
+      - /sys/kernel/tracing:/sys/kernel/tracing
+      - /sys/kernel/debug:/sys/kernel/debug
+      - /sys/fs/cgroup:/host/sys/fs/cgroup
+      - /D/tmp/coroot2/node_agent_data:/data
+    command:
+      - '--collector-endpoint=http://coroot:8888'
+      - '--clickhouse-endpoint=clickhouse:9000'
+      - '--cgroupfs-root=/host/sys/fs/cgroup'
+      - '--wal-dir=/data'
+    depends_on:
+      - clickhouse
+      - coroot
+
+  cluster-agent:
+    restart: always
+    image: registry.cn-beijing.aliyuncs.com/obser/coroot-cluster-agent:latest
+    volumes:
+      - /D/tmp/coroot2/cluster_agent_data:/data
+    command:
+      - '--coroot-url=http://coroot:8888'
+      - '--metrics-scrape-interval=15s'
+      - '--metrics-wal-dir=/data'
+    depends_on:
+      - coroot
+
+  tracing-algo:
+    restart: always
+    image: registry.cn-beijing.aliyuncs.com/obser/coroot-tracing-algo:v1.24.3
+    environment:
+      COROOT_CLICKHOUSE_ADDRESS: "clickhouse:8123"
+    ports:
+      - "4200:4200"
+    depends_on:
+      - clickhouse
+      - node-agent
+
+  prometheus:
+    restart: always
+    image: prom/prometheus:v2.45.4
+    volumes:
+      - /D/tmp/coroot2/prometheus_data:/prometheus  # chmod 777 -R
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-remote-write-receiver'
+    ports:
+      - "9090:9090"
+
+  clickhouse:
+    restart: always
+    image: clickhouse/clickhouse-server:24.3
+    volumes:
+      - /D/tmp/coroot2/clickhouse_data:/var/lib/clickhouse
+      - /D/tmp/coroot2/clickhouse_logs:/var/log/clickhouse-server
+    ports:
+      - "9000:9000"
+      - "8123:8123"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
