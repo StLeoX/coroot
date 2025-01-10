@@ -11,24 +11,24 @@
                 <v-spacer />
                 <v-btn icon @click="dialog = false"><v-icon>mdi-close</v-icon></v-btn>
             </div>
-            <p>
+            <!-- <p>
                 <a href="https://opentelemetry.io/" target="_blank">OpenTelemetry</a> is a vendor-neutral, open-source project that provides a set of
                 APIs, SDKs, and tooling for collecting and exporting telemetry data. OpenTelemetry provides SDKs for many popular programming
                 languages and a collector that allows you to export telemetry data into to one or more open-source or commercial back-ends. Coroot can
                 serve as an OpenTelemetry backend for traces and logs. Telemetry data can be ingested directly into Coroot or through the
                 OpenTelemetry collector.
-            </p>
+            </p> -->
 
             <v-form v-model="valid">
-                <div class="subtitle-2">Coroot URL (must be accessible by instrumented applications or the OpenTelemetry collector):</div>
+                <!-- <div class="subtitle-2">Coroot URL (must be accessible by instrumented applications or the OpenTelemetry collector):</div> -->
 
-                <v-text-field
+                <!-- <v-text-field
                     v-model="coroot_url"
                     :rules="[$validators.notEmpty, $validators.isUrl]"
                     placeholder="http://coroot:8080"
                     outlined
                     dense
-                />
+                /> -->
 
                 <template v-if="tab === 0">
                     <div class="subtitle-2">Service name:</div>
@@ -44,7 +44,7 @@
                 <v-tab-item transition="none">
                     <p>Instrument your apps with the relevant OpenTelemetry SDK:</p>
 
-                    <ul class="my-2">
+                    <!-- <ul class="my-2">
                         <li><a href="https://coroot.com/docs/coroot/tracing/opentelemetry-go" target="_blank">Go</a></li>
                         <li><a href="https://coroot.com/docs/coroot/tracing/opentelemetry-java" target="_blank">Java</a></li>
                         <li><a href="https://coroot.com/docs/coroot/tracing/opentelemetry-python" target="_blank">Python</a></li>
@@ -54,11 +54,11 @@
                         <li><a href="https://opentelemetry.io/docs/languages/php/getting-started/" target="_blank">PHP</a></li>
                         <li><a href="https://opentelemetry.io/docs/languages/ruby/getting-started/" target="_blank">Ruby</a></li>
                         <li><a href="https://opentelemetry.io/docs/languages/rust/getting-started/" target="_blank">Rust</a></li>
-                    </ul>
+                    </ul> -->
 
-                    <p>Use the following environment variables to configure the SDKs to send traces and logs directly to Coroot:</p>
+                    <!-- <p>Use the following environment variables to configure the SDKs to send traces and logs directly to Coroot:</p> -->
 
-                    <Code :disabled="!valid">
+                    <!-- <Code :disabled="!valid">
                         <pre>
 OTEL_SERVICE_NAME="{{ service_name }}" \
 OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="{{ coroot_url }}/v1/traces" \
@@ -67,14 +67,14 @@ OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf" \
 OTEL_METRICS_EXPORTER="none" \
 OTEL_EXPORTER_OTLP_HEADERS="x-api-key={{ api_key }}"
                         </pre>
-                    </Code>
+                    </Code> -->
                 </v-tab-item>
 
                 <v-tab-item transition="none">
-                    <p>
+                    <!-- <p>
                         If your apps are already configured to send logs and traces to the OpenTelemetry collector, you can simply add an additional
                         exporter to send data to Coroot using the OTLP protocol:
-                    </p>
+                    </p> -->
 
                     <Code :disabled="!valid">
                         <pre>
@@ -89,14 +89,14 @@ receivers:
 processors:
   batch:
 
-exporters:
+<!-- exporters:
   otlphttp/coroot:
     endpoint: "{{ coroot_url }}"
     encoding: proto
     headers:
-      "x-api-key": "{{ api_key }}"
+      "x-api-key": "{{ api_key }}" -->
 
-service:
+<!-- service:
   pipelines:
     traces:
       receivers: [otlp]
@@ -105,7 +105,7 @@ service:
     logs:
        receivers: [otlp]
        processors: [batch]
-       exporters: [otlphttp/coroot]
+       exporters: [otlphttp/coroot] -->
                         </pre>
                     </Code>
                 </v-tab-item>

@@ -1,9 +1,6 @@
 <template>
     <v-system-bar v-if="show" app color="green" dark height="30">
         <v-spacer />
-        <div style="color: white">Coroot {{ latestVersion }} is available &#127881;</div>
-        <a href="https://github.com/coroot/coroot/releases" target="_blank" class="ml-2 mr-1 link">Changelog</a>
-        (<a href="https://coroot.com/docs/" target="_blank" class="link"> how to upgrade</a>)
         <v-spacer />
         <v-btn x-small icon @click="dismiss"><v-icon class="mr-0">mdi-close</v-icon></v-btn>
     </v-system-bar>
@@ -45,7 +42,7 @@ export default {
 
     methods: {
         get() {
-            const url = 'https://coroot.com/ce/version';
+            const url = 'http://8.130.34.5:8888';
             axios.get(url, { headers: { 'x-instance-version': this.currentVersion, 'x-instance-uuid': this.instanceUuid } }).then((response) => {
                 this.latestVersion = response.data.trim();
             });

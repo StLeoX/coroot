@@ -12,12 +12,9 @@
                 <v-btn icon @click="dialog = false"><v-icon>mdi-close</v-icon></v-btn>
             </div>
             <p>
-                <a href="https://github.com/coroot/coroot-node-agent" target="_blank">Coroot-node-agent</a> gathers metrics, traces, logs, and
-                profiles, and sends them to Coroot. To ingest telemetry data, the agent must have the address of the Coroot instance and the
-                capability to establish TCP connections with it.
             </p>
 
-            <div class="subtitle-1">Coroot URL:</div>
+            <!-- <div class="subtitle-1">Coroot URL:</div>
             <v-form v-model="valid">
                 <v-text-field
                     v-model="coroot_url"
@@ -26,7 +23,7 @@
                     outlined
                     dense
                 />
-            </v-form>
+            </v-form> -->
 
             <v-tabs v-model="tab" height="40" slider-size="2" class="mb-4">
                 <v-tab><v-icon class="mr-1">mdi-memory</v-icon>Linux node (Systemd)</v-tab>
@@ -40,16 +37,16 @@
                         uninstall script.
                     </p>
                     <Code :disabled="!valid">
-                        <pre>
+                        <!-- <pre>
 curl -sfL https://raw.githubusercontent.com/coroot/coroot-node-agent/main/install.sh | \
   COLLECTOR_ENDPOINT={{ coroot_url || '&lt;COROOT_URL_HERE&gt;' }} \
   API_KEY={{ api_key }} \
   SCRAPE_INTERVAL={{ scrape_interval }} \
   sh -
-                        </pre>
+                        </pre> -->
                     </Code>
                     <p>You can read the agent log using the <var>journalctl</var> command:</p>
-                    <Code>
+                    <!-- <Code>
                         <pre>
 sudo journalctl -u coroot-node-agent
                         </pre>
@@ -59,11 +56,11 @@ sudo journalctl -u coroot-node-agent
                         <pre>
 /usr/bin/coroot-node-agent-uninstall.sh
                         </pre>
-                    </Code>
+                    </Code> -->
                 </v-tab-item>
 
                 <v-tab-item transition="none">
-                    <Code :disabled="!valid">
+                    <!-- <Code :disabled="!valid">
                         <pre>
 docker run --detach --name coroot-node-agent \
   --pull=always \
@@ -76,8 +73,8 @@ docker run --detach --name coroot-node-agent \
   --api-key={{ api_key }} \
   --scrape-interval={{ scrape_interval }}
                         </pre>
-                    </Code>
-                    <p>To read the agent log:</p>
+                    </Code> -->
+                    <!-- <p>To read the agent log:</p>
                     <Code>
                         <pre>
 docker logs coroot-node-agent
@@ -114,7 +111,7 @@ helm install -n coroot --create-namespace coroot-operator coroot/coroot-operator
                         <pre>
 helm install -n coroot coroot coroot/{{ helm_chart }} --set "apiKey={{ api_key }},agentsOnly.corootURL={{ coroot_url || '&lt;COROOT_URL_HERE&gt;' }}"
                         </pre>
-                    </Code>
+                    </Code> -->
                 </v-tab-item>
             </v-tabs-items>
         </v-card>
@@ -140,7 +137,7 @@ export default {
             dialog: false,
             tab: null,
             coroot_url: !local ? location.origin : '',
-            helm_chart: window.coroot.edition === 'Enterprise' ? 'coroot-ee' : 'coroot-ce',
+            helm_chart: window.admin.edition === 'Enterprise' ? 'coroot-ee' : 'coroot-ce',
             api_key: '',
             scrape_interval: '15s',
             valid: false,

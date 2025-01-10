@@ -44,9 +44,6 @@
             <Traces />
         </template>
 
-        <template v-if="view === 'costs'">
-            <Costs />
-        </template>
 
         <template v-if="view === 'anomalies'">
             <RCA v-if="id" :appId="id" />
@@ -65,7 +62,6 @@ import Traces from '@/views/Traces.vue';
 import Nodes from '@/views/Nodes.vue';
 import Node from '@/views/Node.vue';
 import Deployments from '@/views/Deployments.vue';
-import Costs from '@/views/Costs.vue';
 import Anomalies from '@/views/Anomalies.vue';
 import RCA from '@/views/RCA.vue';
 
@@ -80,7 +76,6 @@ export default {
         Nodes,
         Node,
         Deployments,
-        Costs,
         Anomalies,
         RCA,
     },
@@ -99,7 +94,6 @@ export default {
                 traces: 'Traces',
                 nodes: 'Nodes',
                 deployments: 'Deployments',
-                costs: 'Costs',
                 anomalies: this.$coroot.edition === 'Enterprise' ? 'Anomalies' : '',
             };
         },

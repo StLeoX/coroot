@@ -5,15 +5,10 @@
         <v-app-bar app flat dark class="menu">
             <v-container class="py-0 fill-height flex-nowrap">
                 <router-link :to="project ? { name: 'overview', query: $utils.contextQuery() } : { name: 'index' }">
-                    <img
-                        :src="`${$coroot.base_path}static/logo${$coroot.edition === 'Enterprise' ? '-ee' : ''}.svg`"
-                        height="38"
-                        class="logo"
-                        alt=":~#"
-                    />
+                    
                 </router-link>
 
-                <div v-if="user">
+                <!-- <div v-if="user">
                     <v-menu dark offset-y tile attach=".v-app-bar">
                         <template #activator="{ on, attrs }">
                             <v-btn v-on="on" plain outlined class="ml-3 px-2" height="40">
@@ -35,7 +30,7 @@
                             <v-list-item :to="{ name: 'project_new' }" exact> <v-icon small>mdi-plus</v-icon> new project </v-list-item>
                         </v-list>
                     </v-menu>
-                </div>
+                </div> -->
 
                 <div v-if="$vuetify.breakpoint.mdAndUp && project && $route.name !== 'project_settings'" class="ml-3 flex-grow-1">
                     <Search />
@@ -43,7 +38,7 @@
 
                 <v-spacer />
 
-                <div v-if="$vuetify.breakpoint.smAndUp" class="ml-3">
+                <!-- <div v-if="$vuetify.breakpoint.smAndUp" class="ml-3">
                     <v-menu dark offset-y tile attach=".v-app-bar">
                         <template #activator="{ on }">
                             <v-btn v-on="on" plain outlined height="40" class="px-2">
@@ -70,7 +65,7 @@
                             </v-list-item>
                         </v-list>
                     </v-menu>
-                </div>
+                </div> -->
                 <div v-if="project && $route.name !== 'project_settings'" class="ml-3">
                     <TimePicker :small="$vuetify.breakpoint.xsOnly" />
                 </div>
@@ -136,7 +131,7 @@
                         </template>
                         <template v-else-if="status.node_agent.status !== 'ok'">
                             <div class="flex-grow-1 mb-3 mb-sm-0">
-                                No metrics found. If you just installed Coroot and node-agent, please wait a couple minutes for it to collect data.
+                                No metrics found. If you just installed  and node-agent, please wait a couple minutes for it to collect data.
                                 <br />
                                 If you haven't installed node-agent, please do so now.
                             </div>
@@ -144,7 +139,7 @@
                         </template>
                         <template v-else-if="status.kube_state_metrics && status.kube_state_metrics.status !== 'ok'">
                             <div class="flex-grow-1 mb-3 mb-sm-0">
-                                It looks like you use Kubernetes, so Coroot requires <b>kube-state-metrics</b>
+                                It looks like you use Kubernetes, so  requires <b>kube-state-metrics</b>
                                 to combine individual containers into applications.
                             </div>
                             <v-btn outlined :to="{ name: 'project_settings' }">Install kube-state-metrics</v-btn>

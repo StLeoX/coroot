@@ -18,7 +18,7 @@
 
             <div class="d-flex align-center mt-2">
                 <Led :status="status.node_agent.status" />
-                <span class="font-weight-medium">coroot-node-agent</span>:
+                <span class="font-weight-medium">node-agent</span>:
                 <span class="ml-1 mr-2">
                     <template v-if="status.node_agent.status === 'unknown'"> unknown </template>
                     <template v-else>
@@ -29,7 +29,6 @@
                         </template>
                     </template>
                 </span>
-                <AgentInstallation color="primary" small>Install</AgentInstallation>
             </div>
 
             <div v-if="status.kube_state_metrics" class="d-flex align-center mt-2">
@@ -42,7 +41,6 @@
                     <template v-if="loading">checking...</template>
                     <template v-else>no kube-state-metrics installed</template>
                 </template>
-                (<a href="https://coroot.com/docs/metric-exporters/kube-state-metrics" target="_blank">docs</a>)
             </div>
         </div>
     </div>
@@ -50,14 +48,13 @@
 
 <script>
 import Led from '../components/Led.vue';
-import AgentInstallation from './AgentInstallation.vue';
 
 export default {
     props: {
         projectId: String,
     },
 
-    components: { Led, AgentInstallation },
+    components: { Led },
 
     data() {
         return {

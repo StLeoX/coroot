@@ -21,7 +21,7 @@ import Saml from '@/views/auth/Saml.vue';
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
-const config = window.coroot;
+const config = window.admin;
 
 Vue.use(VueRouter);
 const router = new VueRouter({

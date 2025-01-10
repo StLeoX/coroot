@@ -1,9 +1,9 @@
 <template>
     <div>
-        <v-alert v-if="disabled" color="info" outlined text>
+        <!-- <v-alert v-if="disabled" color="info" outlined text>
             Single Sign-On through SAML is available only in Coroot Enterprise (from $1 per CPU core/month).
             <a href="https://coroot.com/account" target="_blank" class="font-weight-bold">Start</a> your free trial today.
-        </v-alert>
+        </v-alert> -->
         <v-simple-table dense class="params">
             <tbody>
                 <tr>
@@ -39,11 +39,11 @@
                 </tr>
                 <tr>
                     <td class="font-weight-medium text-no-wrap">Attribute mapping:</td>
-                    <td>
+                    <!-- <td>
                         Coroot expects to receive the <b>Email</b>, <b>FirstName</b>, and <b>LastName</b> attributes.
                         <br />
                         Please configure Attribute Mapping on your Identity Provider's side.
-                    </td>
+                    </td> -->
                 </tr>
                 <tr>
                     <td class="font-weight-medium text-no-wrap">Default role:</td>

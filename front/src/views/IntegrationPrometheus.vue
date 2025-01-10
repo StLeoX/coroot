@@ -4,7 +4,6 @@
             >This project uses a global Prometheus configuration that can't be changed through the UI</v-alert
         >
         <div class="subtitle-1">Prometheus URL</div>
-        <div class="caption">Coroot works on top of the telemetry data stored in your Prometheus server.</div>
         <v-text-field
             outlined
             dense
@@ -53,7 +52,7 @@
 
         <div class="subtitle-1 mt-3">Refresh interval</div>
         <div class="caption">
-            How often Coroot retrieves telemetry data from a Prometheus. The value must be greater than the
+            <!-- How often Coroot retrieves telemetry data from a Prometheus. The value must be greater than the -->
             <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/" target="_blank" rel="noopener noreferrer"
                 ><var>scrape_interval</var></a
             >

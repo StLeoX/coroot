@@ -4,7 +4,7 @@
             <img :src="`${$coroot.base_path}static/icon.svg`" alt=":~#" height="80" />
         </div>
 
-        <h2 class="text-h4 my-5 text-center">Welcome to Coroot</h2>
+        <h2 class="text-h4 my-5 text-center">Welcome</h2>
 
         <v-form v-model="valid" @submit.prevent="post" ref="form">
             <v-alert v-if="error" color="red" icon="mdi-alert-octagon-outline" outlined text>
@@ -46,7 +46,7 @@
         </v-form>
 
         <div v-if="!set_admin_password" class="caption grey--text text-center mt-10">
-            Contact your Coroot administrator if you forgot your email or password.
+            <!-- Contact your Coroot administrator if you forgot your email or password. -->
         </div>
     </div>
 </template>

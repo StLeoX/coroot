@@ -61,7 +61,6 @@
                         <div class="subtitle-1">Custom patterns</div>
                         <div class="caption">
                             space-delimited list of
-                            <a href="https://en.wikipedia.org/wiki/Glob_(programming)" target="_blank">glob patterns</a>
                             in the <var>&lt;namespace&gt;/&lt;application_name&gt;</var> format, e.g.: <var>staging/* test-*/*</var>
                         </div>
                         <v-textarea v-model="form.custom_patterns" outlined dense rows="1" auto-grow :disabled="form.del" hide-details />

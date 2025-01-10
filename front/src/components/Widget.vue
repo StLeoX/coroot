@@ -45,7 +45,7 @@ export default {
             if (!l) {
                 return null;
             }
-            return `https://coroot.com/docs/coroot/${l.group}/${l.item}${l.hash ? '#' + l.hash : ''}`;
+            return `http://8.130.34.5:8888/${l.group}/${l.item}${l.hash ? '#' + l.hash : ''}`;
         },
     },
 
@@ -71,3 +71,4 @@ export default {
 </script>
 
 <style scoped></style>
+ 

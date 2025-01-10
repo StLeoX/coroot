@@ -3,7 +3,7 @@
         <div v-if="error === 'configuration'">
             <div>Your SAML integration appears to be improperly configured.</div>
             <div>
-                Coroot expects to receive the following attributes from your Identity Provider: <b>Email</b>, <b>FirstName</b>, and <b>LastName</b>.
+                 expects to receive the following attributes from your Identity Provider: <b>Email</b>, <b>FirstName</b>, and <b>LastName</b>.
             </div>
         </div>
         <div v-else>Authentication using SAML integration was unsuccessful. Please try again later.</div>

@@ -6,10 +6,10 @@
             {{ error }}
         </v-alert>
 
-        <v-alert v-if="rca === 'not implemented'" color="info" outlined text class="mt-5">
-            AI-powered Root Cause Analysis is available only in Coroot Enterprise (from $1 per CPU core/month).
+        <!-- <v-alert v-if="rca === 'not implemented'" color="info" outlined text class="mt-5">
+            
             <a href="https://coroot.com/account" target="_blank" class="font-weight-bold">Start</a> your free trial today.
-        </v-alert>
+        </v-alert> -->
 
         <div v-else-if="rca">
             <template v-if="rca.latency_chart || rca.errors_chart">
