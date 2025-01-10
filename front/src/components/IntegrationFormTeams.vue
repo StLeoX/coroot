@@ -7,8 +7,6 @@
             <li>Select <v-icon color="black">mdi-dots-horizontal</v-icon> from the top navigation menu and choose <b>Connectors</b></li>
             <li>Search for <b>Incoming Webhook</b> and press the <b>Configure</b> button</li>
             <li>
-                Provide a name for the webhook (e.g. <i>Coroot</i>), customize the image (you can use the
-                <a href="https://coroot.com/static/img/coroot.png" target="_blank">Coroot logo</a>), and click
                 <b>Create</b>
             </li>
             <li>Copy the webhook URL and paste it below</li>

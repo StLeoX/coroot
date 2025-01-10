@@ -8,19 +8,15 @@
 
         <Table v-if="nodes && nodes.rows" :header="nodes.header" :rows="nodes.rows" />
         <NoData v-else-if="!loading && !error" />
-        <div class="mt-4">
-            <AgentInstallation color="primary">Add nodes</AgentInstallation>
-        </div>
     </div>
 </template>
 
 <script>
-import AgentInstallation from '@/views/AgentInstallation.vue';
 import NoData from '@/components/NoData.vue';
 import Table from '@/components/Table.vue';
 
 export default {
-    components: { Table, NoData, AgentInstallation },
+    components: { Table, NoData },
 
     data() {
         return {

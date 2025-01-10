@@ -5,7 +5,7 @@
             <li>Navigate to <b>Services</b> &rarr; <b>Service Directory</b></li>
             <li>Choose a target service (or create a new one)</li>
             <li>Go to <b>Integrations</b> &rarr; <b>+ Add another integration</b> and create the <b>Events API V2</b> integration</li>
-            <li>Change the <b>Integration Name</b>, if necessary (e.g. <i>Coroot</i>)</li>
+            <li>Change the <b>Integration Name</b> if necessary</li>
             <li>Copy the <b>Integration Key</b> and paste it below</li>
         </ol>
 

@@ -21,13 +21,13 @@
 
             <template v-if="type === 'postgres'">
                 <p>
-                    This integration allows Coroot to collect Postgres-specific metrics. It requires a database user with the
+                    This integration allows to collect Postgres-specific metrics. It requires a database user with the
                     <var>pg_monitor</var> role and the <var>pg_stat_statements</var> extension enabled.
                 </p>
                 <Code>
                     <pre>
-create role coroot with login password '&lt;PASSWORD&gt;';
-grant pg_monitor to coroot;
+create role  with login password '&lt;PASSWORD&gt;';
+grant pg_monitor to ;
 create extension pg_stat_statements;
                     </pre>
                 </Code>
@@ -35,17 +35,17 @@ create extension pg_stat_statements;
             </template>
 
             <template v-if="type === 'mysql'">
-                <p>This integration allows Coroot to collect Mysql-specific metrics. It requires a Mysql user with the following permissions:</p>
+                <p>This integration allows to collect Mysql-specific metrics. It requires a Mysql user with the following permissions:</p>
                 <Code>
                     <pre>
-CREATE USER 'coroot'@'%' IDENTIFIED BY '&lt;PASSWORD&gt;';
-GRANT SELECT, PROCESS, REPLICATION CLIENT ON *.* TO 'coroot'@'%';
+CREATE USER ''@'%' IDENTIFIED BY '&lt;PASSWORD&gt;';
+GRANT SELECT, PROCESS, REPLICATION CLIENT ON *.* TO ''@'%';
                     </pre>
                 </Code>
             </template>
 
             <template v-if="type === 'redis'">
-                <p>This integration allows Coroot to collect Redis-specific metrics.</p>
+                <p>This integration allows to collect Redis-specific metrics.</p>
             </template>
 
             <v-form v-if="config" v-model="valid">

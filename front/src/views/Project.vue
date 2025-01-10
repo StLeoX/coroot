@@ -22,68 +22,26 @@
         </template>
 
         <template v-if="tab === 'prometheus'">
-            <h1 class="text-h5 my-5">
-                Prometheus integration
-                <a href="https://coroot.com/docs/coroot/configuration/prometheus" target="_blank">
-                    <v-icon>mdi-information-outline</v-icon>
-                </a>
-            </h1>
+            <h1 class="text-h5 my-5">Prometheus integration</h1>
             <IntegrationPrometheus />
         </template>
 
         <template v-if="tab === 'clickhouse'">
-            <h1 class="text-h5 my-5">
-                ClickHouse integration
-                <a href="https://coroot.com/docs/coroot/configuration/clickhouse" target="_blank">
-                    <v-icon>mdi-information-outline</v-icon>
-                </a>
-            </h1>
-            <p>
-                Coroot stores
-                <a href="https://coroot.com/docs/coroot/logs" target="_blank">logs</a>,
-                <a href="https://coroot.com/docs/coroot/tracing" target="_blank">traces</a>, and
-                <a href="https://coroot.com/docs/coroot/profiling" target="_blank">profiles</a> in the ClickHouse database.
-            </p>
+            <h1 class="text-h5 my-5">ClickHouse integration</h1>
+            <p></p>
             <IntegrationClickhouse />
         </template>
 
-        <template v-if="tab === 'aws'">
-            <h1 class="text-h5 my-5">AWS integration</h1>
-            <IntegrationAWS />
-        </template>
-
         <template v-if="tab === 'inspections'">
-            <h1 class="text-h5 my-5">
-                Inspection configs
-                <a href="https://coroot.com/docs/coroot/inspections/overview" target="_blank">
-                    <v-icon>mdi-information-outline</v-icon>
-                </a>
-            </h1>
+            <h1 class="text-h5 my-5">Inspection configs</h1>
             <Inspections />
         </template>
 
         <template v-if="tab === 'applications'">
-            <h2 class="text-h5 my-5" id="categories">
-                Application categories
-                <a href="https://coroot.com/docs/coroot/configuration/application-categories" target="_blank">
-                    <v-icon>mdi-information-outline</v-icon>
-                </a>
-            </h2>
-            <p>
-                You can organize your applications into groups by defining
-                <a href="https://en.wikipedia.org/wiki/Glob_(programming)" target="_blank">glob patterns</a>
-                in the <var>&lt;namespace&gt;/&lt;application_name&gt;</var> format.
-            </p>
+            <h2 class="text-h5 my-5" id="categories">Application categories</h2>
             <ApplicationCategories />
 
-            <h2 class="text-h5 mt-10 mb-5" id="custom-applications">
-                Custom applications
-                <a href="https://coroot.com/docs/coroot/configuration/custom-applications" target="_blank">
-                    <v-icon>mdi-information-outline</v-icon>
-                </a>
-            </h2>
-
-            <p>Coroot groups individual containers into applications using the following approach:</p>
+            <h2 class="text-h5 mt-10 mb-5" id="custom-applications">Custom applications</h2>
 
             <ul>
                 <li><b>Kubernetes metadata</b>: Pods are grouped into Deployments, StatefulSets, etc.</li>
@@ -94,48 +52,14 @@
                 </li>
             </ul>
 
-            <p class="my-5">
+            <!-- <p class="my-5">
                 This default approach works well in most cases. However, since no one knows your system better than you do, Coroot allows you to
                 manually adjust application groupings to better fit your specific needs. You can match desired application instances by defining
                 <a href="https://en.wikipedia.org/wiki/Glob_(programming)" target="_blank">glob patterns</a>
                 for <var>instance_name</var>. Note that this is not applicable to Kubernetes applications.
-            </p>
+            </p> -->
 
             <CustomApplications />
-        </template>
-
-        <template v-if="tab === 'notifications'">
-            <h1 class="text-h5 my-5">
-                Notification integrations
-                <a href="https://coroot.com/docs/coroot/alerting/slo-monitoring" target="_blank">
-                    <v-icon>mdi-information-outline</v-icon>
-                </a>
-            </h1>
-            <Integrations />
-        </template>
-
-        <template v-if="tab === 'organization'">
-            <h1 class="text-h5 my-5">
-                Users
-                <a href="https://coroot.com/docs/coroot/configuration/authentication" target="_blank">
-                    <v-icon>mdi-information-outline</v-icon>
-                </a>
-            </h1>
-            <Users />
-            <h1 class="text-h5 mt-10 mb-5">
-                Role-Based Access Control (RBAC)
-                <a href="https://coroot.com/docs/coroot/configuration/rbac" target="_blank">
-                    <v-icon>mdi-information-outline</v-icon>
-                </a>
-            </h1>
-            <RBAC />
-            <h1 class="text-h5 mt-10 mb-5">
-                Single Sign-On (SAML)
-                <a href="https://coroot.com/docs/coroot/configuration/authentication" target="_blank">
-                    <v-icon>mdi-information-outline</v-icon>
-                </a>
-            </h1>
-            <SSO />
         </template>
     </div>
 </template>
@@ -146,14 +70,9 @@ import ProjectStatus from './ProjectStatus.vue';
 import ProjectDelete from './ProjectDelete.vue';
 import Inspections from './Inspections.vue';
 import ApplicationCategories from './ApplicationCategories.vue';
-import Integrations from './Integrations.vue';
 import IntegrationPrometheus from './IntegrationPrometheus.vue';
 import IntegrationClickhouse from './IntegrationClickhouse.vue';
-import IntegrationAWS from './IntegrationAWS.vue';
 import CustomApplications from './CustomApplications.vue';
-import Users from './Users.vue';
-import RBAC from './RBAC.vue';
-import SSO from './SSO.vue';
 
 export default {
     props: {
@@ -165,16 +84,11 @@ export default {
         CustomApplications,
         IntegrationPrometheus,
         IntegrationClickhouse,
-        IntegrationAWS,
         Inspections,
         ProjectSettings,
         ProjectStatus,
         ProjectDelete,
         ApplicationCategories,
-        Integrations,
-        Users,
-        RBAC,
-        SSO,
     },
 
     mounted() {
@@ -190,11 +104,9 @@ export default {
                 { id: undefined, name: 'General' },
                 { id: 'prometheus', name: 'Prometheus', disabled },
                 { id: 'clickhouse', name: 'Clickhouse', disabled },
-                { id: 'aws', name: 'AWS', disabled },
                 { id: 'inspections', name: 'Inspections', disabled },
                 { id: 'applications', name: 'Applications', disabled },
                 { id: 'notifications', name: 'Notifications', disabled },
-                { id: 'organization', name: 'Organization' },
             ];
         },
     },

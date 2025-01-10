@@ -5,8 +5,8 @@
             <li>Navigate to the <b>Teams</b> page</li>
             <li>Choose a team (or create a new one)</li>
             <li>Go to <b>Integrations</b> &rarr; <b>Add integration</b> and create an <b>API</b> integration</li>
-            <li>Change the <b>Name</b>, if necessary (e.g. <i>Coroot</i>)</li>
-            <li>Adjust permissions (Coroot requires only <b>Create and Update Access</b>)</li>
+            <li>Change the <b>Name</b> if necessary</li>
+            <li>Adjust permissions ( requires only <b>Create and Update Access</b>)</li>
             <li>Press <b>Save Integration</b></li>
             <li>Copy the <b>API Key</b> and paste it below</li>
         </ol>

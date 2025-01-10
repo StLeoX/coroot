@@ -1,8 +1,9 @@
 <template>
     <div>
         <p>
-            This integration enables Coroot to discover RDS and ElastiCache instances and collect their telemetry data. It requires permissions to
+            <!-- This integration enables Coroot to discover RDS and ElastiCache instances and collect their telemetry data. It requires permissions to
             describe RDS and ElastiCache instances, read their logs and read Enhanced Monitoring data from CloudWatch.
+        </p> -->
         </p>
 
         <p>
@@ -65,7 +66,7 @@
 
         <v-form v-if="form" v-model="valid" ref="form">
             <div class="subtitle-1 mt-3">Region</div>
-            <div class="caption">Coroot only discovers RDS and ElastiCache instances within the specified region, e.g. <var>us-west-1</var></div>
+            <div class="caption">We only discover RDS and ElastiCache instances within the specified region, e.g. <var>us-west-1</var></div>
             <v-text-field v-model="form.region" :rules="[$validators.notEmpty]" outlined dense hide-details single-line clearable />
 
             <div class="subtitle-1 mt-3">Access Key ID</div>
