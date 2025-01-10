@@ -1,8 +1,8 @@
 COROOT_VERSION ?= latest
 UI_PATH = front
 
-.PHONY: all
-all: lint build test
+.PHONY: pre-push
+pre-push: lint build test
 
 .PHONY: lint
 lint: go-lint ui-lint

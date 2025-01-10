@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - leo/*
 
 jobs:
   GO:
@@ -21,8 +22,8 @@ jobs:
           go install golang.org/x/tools/cmd/goimports@latest
           files=$(goimports -l .); if [[ -n "$files" ]]; then echo "$files"; exit 1; fi
       - run: mkdir static && touch static/file.txt && go vet ./...
-      - run: go test ./...
-      - run: go build -mod=readonly .
+      - run: make go-test
+      - run: make go-build
   UI:
     runs-on: ubuntu-latest
     defaults:
