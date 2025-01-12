@@ -54,7 +54,7 @@ npm-build:
 
 .PHONY: docker
 docker: npm-build
-	docker build . -t registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.3
+	docker build . -t registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.4
 
 .PHONY: docker.debug
 docker.debug:
