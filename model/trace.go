@@ -127,7 +127,12 @@ func (s *TraceSpan) Details() TraceSpanDetails {
 	return res
 }
 
-// SterilizeSpanAttributes handles some attributes shouldn't appear in UI.
+// SterilizeResourceAttributes handles Resource Attributes doesn't want when `getSpans`, `getTraces`.
+func (s *TraceSpan) SterilizeResourceAttributes() {
+	delete(s.SpanAttributes, "host.id")
+}
+
+// SterilizeSpanAttributes handles Span Attributes doesn't want when `getSpans`, `getTraces`.
 func (s *TraceSpan) SterilizeSpanAttributes() {
 	delete(s.SpanAttributes, "tgid_req_cs")
 	delete(s.SpanAttributes, "tgid_resp_cs")

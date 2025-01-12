@@ -443,6 +443,9 @@ func (c *Client) getSpanAttrStats(ctx context.Context, q SpanQuery) ([]model.Tra
 	for _, t := range selectionTraces {
 		for _, s := range t.Spans {
 			for name, value := range s.SpanAttributes {
+				if q.ExcludeSpanAttrs[name] {
+					break
+				}
 				a := Attr{name: name, value: value}
 				if attrs[a] == nil {
 					attrs[a] = &Counts{sampleTraceId: s.TraceId}
@@ -450,6 +453,9 @@ func (c *Client) getSpanAttrStats(ctx context.Context, q SpanQuery) ([]model.Tra
 				attrs[a].selection++
 			}
 			for name, value := range s.ResourceAttributes {
+				if q.ExcludeResourceAttrs[name] {
+					break
+				}
 				a := Attr{name: name, value: value}
 				if attrs[a] == nil {
 					attrs[a] = &Counts{sampleTraceId: s.TraceId}
@@ -461,6 +467,9 @@ func (c *Client) getSpanAttrStats(ctx context.Context, q SpanQuery) ([]model.Tra
 	for _, t := range baselineTraces {
 		for _, s := range t.Spans {
 			for name, value := range s.SpanAttributes {
+				if q.ExcludeSpanAttrs[name] {
+					break
+				}
 				a := Attr{name: name, value: value}
 				if attrs[a] == nil {
 					attrs[a] = &Counts{sampleTraceId: s.TraceId}
@@ -468,6 +477,9 @@ func (c *Client) getSpanAttrStats(ctx context.Context, q SpanQuery) ([]model.Tra
 				attrs[a].baseline++
 			}
 			for name, value := range s.ResourceAttributes {
+				if q.ExcludeResourceAttrs[name] {
+					break
+				}
 				a := Attr{name: name, value: value}
 				if attrs[a] == nil {
 					attrs[a] = &Counts{sampleTraceId: s.TraceId}
@@ -671,6 +683,10 @@ type SpanQuery struct {
 	Filters []SpanFilter
 	// This is list of ips, not ipports, don't misuse.
 	ExcludePeerAddrs []string
+
+	// Span Attributes doesn't want to display.
+	ExcludeSpanAttrs     map[string]bool
+	ExcludeResourceAttrs map[string]bool
 
 	Diff bool
 }

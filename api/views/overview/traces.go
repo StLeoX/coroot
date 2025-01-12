@@ -152,6 +152,8 @@ func renderTraces(ctx context.Context, ch *clickhouse.Client, w *model.World, qu
 		spans, err = ch.GetRootSpans(ctx, sq)
 	case q.View == "attributes":
 		sq.Limit = attrValuesLimit
+		sq.ExcludeSpanAttrs = map[string]bool{"host.id": true, "otel.scope.name": true, "otel.scope.version": true}
+		sq.ExcludeResourceAttrs = map[string]bool{"net.host.port": true, "server_recv": true, "server_send": true}
 		res.AttrStats, err = ch.GetSpanAttrStats(ctx, sq)
 	case q.View == "errors":
 		res.Errors, err = ch.GetTraceErrors(ctx, sq)
