@@ -1,9 +1,9 @@
 version: '3.8'
 
-name: coroot
+name: monitoring
 
 services:
-  coroot:
+  server:
     restart: always
     image: registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.3.1
     volumes:
@@ -30,13 +30,13 @@ services:
       - /sys/fs/cgroup:/host/sys/fs/cgroup
       - /D/tmp/coroot2/node_agent_data:/data
     command:
-      - '--collector-endpoint=http://coroot:8888'
+      - '--collector-endpoint=http://server:8888'
       - '--clickhouse-endpoint=clickhouse:9000'
       - '--cgroupfs-root=/host/sys/fs/cgroup'
       - '--wal-dir=/data'
     depends_on:
       - clickhouse
-      - coroot
+      - server
 
   cluster-agent:
     restart: always
@@ -44,11 +44,11 @@ services:
     volumes:
       - /D/tmp/coroot2/cluster_agent_data:/data
     command:
-      - '--coroot-url=http://coroot:8888'
+      - '--coroot-url=http://server:8888'
       - '--metrics-scrape-interval=15s'
       - '--metrics-wal-dir=/data'
     depends_on:
-      - coroot
+      - server
 
   tracing-algo:
     restart: always
