@@ -42,7 +42,7 @@ func main() {
 	cacheTTL := kingpin.Flag("cache-ttl", "Cache TTL").Envar("CACHE_TTL").Default("720h").Duration()
 	cacheGcInterval := kingpin.Flag("cache-gc-interval", "Cache GC interval").Envar("CACHE_GC_INTERVAL").Default("10m").Duration()
 	pgConnString := kingpin.Flag("pg-connection-string", "Postgres connection string (sqlite is used if not set)").Envar("PG_CONNECTION_STRING").String()
-	disableStats := kingpin.Flag("disable-usage-statistics", "Disable usage statistics").Envar("DISABLE_USAGE_STATISTICS").Bool()
+	//disableStats := kingpin.Flag("disable-usage-statistics", "Disable usage statistics").Envar("DISABLE_USAGE_STATISTICS").Bool()
 	bootstrapPrometheusUrl := kingpin.Flag("bootstrap-prometheus-url", "If set, Coroot will create a project for this Prometheus URL").Envar("BOOTSTRAP_PROMETHEUS_URL").String()
 	bootstrapRefreshInterval := kingpin.Flag("bootstrap-refresh-interval", "Refresh interval for the project created upon bootstrap").Envar("BOOTSTRAP_REFRESH_INTERVAL").Duration()
 	bootstrapPrometheusExtraSelector := kingpin.Flag("bootstrap-prometheus-extra-selector", "Prometheus extra selector for the project created upon bootstrap").Envar("BOOTSTRAP_PROMETHEUS_EXTRA_SELECTOR").String()
@@ -178,10 +178,11 @@ func main() {
 		os.Exit(0)
 	}()
 
-	pricing, err := cloud_pricing.NewManager(path.Join(*dataDir, "cloud-pricing"))
-	if err != nil {
-		klog.Exitln(err)
-	}
+	//pricing, err := cloud_pricing.NewManager(path.Join(*dataDir, "cloud-pricing"))
+	//if err != nil {
+	//	klog.Exitln(err)
+	//}
+	var pricing *cloud_pricing.Manager = nil
 
 	instanceUuid := getInstanceUuid(*dataDir)
 
@@ -193,10 +194,11 @@ func main() {
 		klog.Exitln(err)
 	}
 
-	var statsCollector *stats.Collector
-	if !*disableStats {
-		statsCollector = stats.NewCollector(instanceUuid, version, database, promCache, pricing, globalClickHouse)
-	}
+	//var statsCollector *stats.Collector
+	//if !*disableStats {
+	//	statsCollector = stats.NewCollector(instanceUuid, version, database, promCache, pricing, globalClickHouse)
+	//}
+	var statsCollector *stats.Collector = nil
 
 	router := mux.NewRouter()
 	router.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
