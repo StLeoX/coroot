@@ -62,7 +62,7 @@
         <v-select v-model="form.refresh_interval" :items="refreshIntervals" outlined dense :menu-props="{ offsetY: true }" :disabled="form.global" />
 
         <div class="subtitle-1">Extra selector</div>
-        <div class="caption">An additional metric selector that will be added to every Prometheus query (e.g. <var>{cluster="us-west-1"}</var>)</div>
+        <div class="caption">An additional metric selector that will be added to every Prometheus query</div>
         <v-text-field outlined dense v-model="form.extra_selector" :rules="[$validators.isPrometheusSelector]" single-line :disabled="form.global" />
 
         <v-alert v-if="error" color="red" icon="mdi-alert-octagon-outline" outlined text>

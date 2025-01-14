@@ -1,6 +1,8 @@
 <template>
     <v-app>
+<!--
         <CheckForUpdates v-if="$coroot.check_for_updates" :currentVersion="$coroot.version" :instanceUuid="$coroot.uuid" />
+-->
 
         <v-app-bar app flat dark class="menu">
             <v-container class="py-0 fill-height flex-nowrap">
@@ -142,6 +144,7 @@
                             </div>
                             <AgentInstallation outlined>Install node-agent</AgentInstallation>
                         </template>
+<!--
                         <template v-else-if="status.kube_state_metrics && status.kube_state_metrics.status !== 'ok'">
                             <div class="flex-grow-1 mb-3 mb-sm-0">
                                 It looks like you use Kubernetes, so requires <b>kube-state-metrics</b>
@@ -149,6 +152,7 @@
                             </div>
                             <v-btn outlined :to="{ name: 'project_settings' }">Install kube-state-metrics</v-btn>
                         </template>
+-->
                     </div>
                 </v-alert>
 
@@ -164,14 +168,13 @@
 import TimePicker from './components/TimePicker.vue';
 import Search from './views/Search.vue';
 import Led from './components/Led.vue';
-import CheckForUpdates from './components/CheckForUpdates.vue';
 import ThemeSelector from './components/ThemeSelector.vue';
 import AgentInstallation from './views/AgentInstallation.vue';
 import ChangePassword from './views/auth/ChangePassword.vue';
 import './app.css';
 
 export default {
-    components: { Search, TimePicker, Led, CheckForUpdates, ThemeSelector, AgentInstallation, ChangePassword },
+    components: { Search, TimePicker, Led, ThemeSelector, AgentInstallation, ChangePassword },
 
     data() {
         return {

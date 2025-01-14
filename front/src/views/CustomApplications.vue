@@ -50,7 +50,7 @@
                         <div class="caption">
                             space-delimited list of
                             <a href="https://en.wikipedia.org/wiki/Glob_(programming)" target="_blank">glob patterns</a>
-                            for <var>instance_name</var>, e.g.: <var>mysql@node1 cassandra@cass-node*</var>
+                            for <var>instance_name</var>, e.g.: <var>mysql@node1</var>
                         </div>
                         <v-textarea v-model="form.instance_patterns" outlined dense rows="1" auto-grow :disabled="form.del" />
                     </template>

@@ -56,6 +56,10 @@ npm-build:
 docker: npm-build
 	docker build . -t registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.3.1
 
+.PHONY: docker_push
+docker_push: docker
+	docker push registry.cn-beijing.aliyuncs.com/obser/coroot:v1.24.3.1
+
 .PHONY: docker.debug
 docker.debug:
 	docker build . -f Dockerfile.debug -t registry.cn-beijing.aliyuncs.com/obser/coroot:debug

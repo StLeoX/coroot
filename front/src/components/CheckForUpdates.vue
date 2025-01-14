@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
 const key = 'update-alert-dismissed';
 export default {
     props: {
@@ -41,7 +40,7 @@ export default {
 
     methods: {
         get() {
-                this.latestVersion = 'latest';
+            this.latestVersion = 'latest';
         },
         dismiss() {
             this.ignoredVersion = this.latestVersion;

@@ -1,9 +1,6 @@
 <template>
     <v-form v-if="form" v-model="valid" ref="form" style="max-width: 800px">
-        <div class="caption">
-            Project is a separate infrastructure or environment with a dedicated Prometheus, e.g. <var>production</var>, <var>staging</var> or
-            <var>prod-us-west</var>.
-        </div>
+        <div class="caption">Project is a separate infrastructure or environment with a dedicated Prometheus, or a dedicated Clickhouse.</div>
         <v-text-field v-model="form.name" :rules="[$validators.isSlug]" outlined dense required />
 
         <v-alert v-if="error" color="red" icon="mdi-alert-octagon-outline" outlined text>

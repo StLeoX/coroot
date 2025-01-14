@@ -31,6 +31,7 @@
                 </span>
             </div>
 
+<!--
             <div v-if="status.kube_state_metrics" class="d-flex align-center mt-2">
                 <Led :status="status.kube_state_metrics.status" />
                 <span class="font-weight-medium">kube-state-metrics</span>:
@@ -42,6 +43,7 @@
                     <template v-else>no kube-state-metrics installed</template>
                 </template>
             </div>
+-->
         </div>
     </div>
 </template>

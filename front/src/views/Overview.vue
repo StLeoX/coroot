@@ -34,7 +34,6 @@
         <template v-if="view === 'traces'">
             <Traces />
         </template>
-
     </div>
 </template>
 
