@@ -4,7 +4,14 @@
 
         <v-app-bar app flat dark class="menu">
             <v-container class="py-0 fill-height flex-nowrap">
-                <router-link :to="project ? { name: 'overview', query: $utils.contextQuery() } : { name: 'index' }"> </router-link>
+                <router-link :to="project ? { name: 'overview', query: $utils.contextQuery() } : { name: 'index' }">
+                  <img
+                      :src="`${$coroot.base_path}static/icon.svg`"
+                      height="38"
+                      class="logo"
+                      alt=":~#"
+                  />
+                </router-link>
 
                 <!-- <div v-if="user">
                     <v-menu dark offset-y tile attach=".v-app-bar">
