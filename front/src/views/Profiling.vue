@@ -156,6 +156,15 @@ export default {
         get() {
             this.loading = true;
             this.loadingError = '';
+            if (this.appId.indexOf('monitor') !== -1 || this.appId.indexOf('coroot') !== -1) {
+                this.loading = false;
+                this.loadingError = '';
+                this.view.status = 'warning';
+                this.view.message = 'No profile found';
+                this.view.chart = null;
+                this.view.profile = null;
+                return;
+            }
             this.$api.getProfiling(this.appId, this.$route.query.query, (data, error) => {
                 this.loading = false;
                 const errMsg = 'Failed to load profile';
