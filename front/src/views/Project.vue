@@ -101,12 +101,11 @@ export default {
         tabs() {
             const disabled = !this.projectId;
             return [
-                { id: undefined, name: 'General' },
+                { id: undefined, name: 'Project' },
                 { id: 'prometheus', name: 'Prometheus', disabled },
                 { id: 'clickhouse', name: 'Clickhouse', disabled },
-                { id: 'inspections', name: 'Inspections', disabled },
-                { id: 'applications', name: 'Applications', disabled },
-                { id: 'notifications', name: 'Notifications', disabled },
+                { id: 'inspections', name: 'SLOs', disabled },
+                { id: 'applications', name: 'Categories', disabled },
             ];
         },
     },
